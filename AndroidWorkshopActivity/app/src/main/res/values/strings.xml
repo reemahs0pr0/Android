@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Android Workshop – Activity</string>
+    <string name="placeholder">Write your quote here</string>
+</resources>

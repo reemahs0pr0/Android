@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Android Workshop – Permissions</string>
+    <string name="record">Record Audio Permission</string>
+    <string name="receive">Receive SMS Permission</string>
+</resources>

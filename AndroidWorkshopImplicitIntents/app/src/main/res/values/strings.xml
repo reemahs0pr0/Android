@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Android Workshop – Implicit Intents</string>
+    <string name="visit">Visit NUS</string>
+    <string name="locate">Locate NUS</string>
+    <string name="call">Call NUS</string>
+    <string name="email">Email NUS</string>
+</resources>
