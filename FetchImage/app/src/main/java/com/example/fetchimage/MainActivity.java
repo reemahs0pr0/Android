@@ -26,8 +26,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Button getBtn;
-    private List<String> urls = new ArrayList<>();
-    private ImageView image1, image2, image3, image4, image5, image6;
+    private ImageView image1, image2, image3, image4, image5, image6, image7, image8, image9,
+            image10, image11, image12, image13, image14, image15, image16, image17, image18,
+            image19, image20;
+    private List<ImageView> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,43 @@ public class MainActivity extends AppCompatActivity {
         image4 = (ImageView) findViewById(R.id.image4);
         image5 = (ImageView) findViewById(R.id.image5);
         image6 = (ImageView) findViewById(R.id.image6);
+        image7 = (ImageView) findViewById(R.id.image7);
+        image8 = (ImageView) findViewById(R.id.image8);
+        image9 = (ImageView) findViewById(R.id.image9);
+        image10 = (ImageView) findViewById(R.id.image10);
+        image11 = (ImageView) findViewById(R.id.image11);
+        image12 = (ImageView) findViewById(R.id.image12);
+        image13 = (ImageView) findViewById(R.id.image13);
+        image14 = (ImageView) findViewById(R.id.image14);
+        image15 = (ImageView) findViewById(R.id.image15);
+        image16 = (ImageView) findViewById(R.id.image16);
+        image17 = (ImageView) findViewById(R.id.image17);
+        image18 = (ImageView) findViewById(R.id.image18);
+        image19 = (ImageView) findViewById(R.id.image19);
+        image20 = (ImageView) findViewById(R.id.image20);
+        images = new ArrayList<ImageView>() {{
+            add(image1);
+            add(image2);
+            add(image3);
+            add(image4);
+            add(image5);
+            add(image6);
+            add(image7);
+            add(image8);
+            add(image9);
+            add(image10);
+            add(image11);
+            add(image12);
+            add(image13);
+            add(image14);
+            add(image15);
+            add(image16);
+            add(image17);
+            add(image18);
+            add(image19);
+            add(image20);
+        }};
+
         getBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 StringBuilder builder = new StringBuilder();
-                String urls[] = new String[6];
+                String urls[] = new String[20];
                 String url = "https://stocksnap.io/search/" + search;
 
                 try {
@@ -67,17 +106,19 @@ public class MainActivity extends AppCompatActivity {
                     int i = 0;
                     for (Element link : links) {
                         i++;
-                        if (i > 3 && i < 10) {
+                        if (i > 3 && i < 24) {
                             builder.append(link.attr("src"));
                             urls[i-4] = builder.toString();
                             builder = new StringBuilder();
                         }
-                        if (i == 10) {
+                        if (i == 24) {
                             break;
                         }
                     }
                     new DownloadImages().execute(urls[0], urls[1], urls[2], urls[3], urls[4],
-                            urls[5]);
+                            urls[5], urls[6], urls[7], urls[8], urls[9], urls[10], urls[11],
+                            urls[12], urls[13], urls[14], urls[15], urls[16], urls[17], urls[18],
+                            urls[19]);
                 } catch (IOException e) {
                     builder.append("Error : ").append(e.getMessage()).append("\n");
                 }
@@ -86,11 +127,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class DownloadImages extends AsyncTask<String, Void, Bitmap[]> {
-        Bitmap urlsBitmap[] = new Bitmap[5];
-
         @Override
         protected Bitmap[] doInBackground(String... urls) {
-            Bitmap results[] = new Bitmap[6];
+            Bitmap results[] = new Bitmap[20];
             int i = 0;
             for (String url : urls) {
                 try {
@@ -107,12 +146,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Bitmap[] results) {
-            image1.setImageBitmap(results[0]);
-            image2.setImageBitmap(results[1]);
-            image3.setImageBitmap(results[2]);
-            image4.setImageBitmap(results[3]);
-            image5.setImageBitmap(results[4]);
-            image6.setImageBitmap(results[5]);
+            int i = 0;
+            for (ImageView image : images) {
+                image.setImageBitmap(results[i]);
+                i++;
+            }
         }
     }
 }
