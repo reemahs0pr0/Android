@@ -1,6 +1,7 @@
 package com.example.fetchimage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -34,15 +35,18 @@ public class MainActivity extends AppCompatActivity {
             image19, image20;
     private TextView message;
     private List<ImageView> images;
-    private int imageNo = 0, size;
+    private int imageNo = 0, size, imagesClicked = 0;
     private List<String> urls = new ArrayList<String>();
+    private List<String> urlsCopy = new ArrayList<String>();
     private DownloadImages myTask;
     private ProgressBar progressBar;
+    private ArrayList<String> clickedUrls = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         getBtn = (Button) findViewById(R.id.getBtn);
         message = (TextView) findViewById(R.id.message);
         progressBar =(ProgressBar) findViewById(R.id.progressBar);
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         urls.remove(0);
                     }
                     size = urls.size();
+                    urlsCopy.addAll(urls);
                     startDownloading();
                 } catch (IOException e) {
                     builder.append("Error : ").append(e.getMessage()).append("\n");
@@ -189,6 +194,152 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
                 imageNo = 0;
             }
+        }
+    }
+
+    public void imageClicked(View view) {
+        if(view.getTag() != "clicked") {
+            imagesClicked++;
+            view.setAlpha((float) 0.5);
+            view.setTag("clicked");
+            switch (view.getId()) {
+                case R.id.image1:
+                    clickedUrls.add(urlsCopy.get(0));
+                    break;
+                case R.id.image2:
+                    clickedUrls.add(urlsCopy.get(1));
+                    break;
+                case R.id.image3:
+                    clickedUrls.add(urlsCopy.get(2));
+                    break;
+                case R.id.image4:
+                    clickedUrls.add(urlsCopy.get(3));
+                    break;
+                case R.id.image5:
+                    clickedUrls.add(urlsCopy.get(4));
+                    break;
+                case R.id.image6:
+                    clickedUrls.add(urlsCopy.get(5));
+                    break;
+                case R.id.image7:
+                    clickedUrls.add(urlsCopy.get(6));
+                    break;
+                case R.id.image8:
+                    clickedUrls.add(urlsCopy.get(7));
+                    break;
+                case R.id.image9:
+                    clickedUrls.add(urlsCopy.get(8));
+                    break;
+                case R.id.image10:
+                    clickedUrls.add(urlsCopy.get(9));
+                    break;
+                case R.id.image11:
+                    clickedUrls.add(urlsCopy.get(10));
+                    break;
+                case R.id.image12:
+                    clickedUrls.add(urlsCopy.get(11));
+                    break;
+                case R.id.image13:
+                    clickedUrls.add(urlsCopy.get(12));
+                    break;
+                case R.id.image14:
+                    clickedUrls.add(urlsCopy.get(13));
+                    break;
+                case R.id.image15:
+                    clickedUrls.add(urlsCopy.get(14));
+                    break;
+                case R.id.image16:
+                    clickedUrls.add(urlsCopy.get(15));
+                    break;
+                case R.id.image17:
+                    clickedUrls.add(urlsCopy.get(16));
+                    break;
+                case R.id.image18:
+                    clickedUrls.add(urlsCopy.get(17));
+                    break;
+                case R.id.image19:
+                    clickedUrls.add(urlsCopy.get(18));
+                    break;
+                case R.id.image20:
+                    clickedUrls.add(urlsCopy.get(19));
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            imagesClicked--;
+            view.setAlpha(1);
+            view.setTag("");
+            switch (view.getId()) {
+                case R.id.image1:
+                    clickedUrls.remove(urlsCopy.get(0));
+                    break;
+                case R.id.image2:
+                    clickedUrls.remove(urlsCopy.get(1));
+                    break;
+                case R.id.image3:
+                    clickedUrls.remove(urlsCopy.get(2));
+                    break;
+                case R.id.image4:
+                    clickedUrls.remove(urlsCopy.get(3));
+                    break;
+                case R.id.image5:
+                    clickedUrls.remove(urlsCopy.get(4));
+                    break;
+                case R.id.image6:
+                    clickedUrls.remove(urlsCopy.get(5));
+                    break;
+                case R.id.image7:
+                    clickedUrls.remove(urlsCopy.get(6));
+                    break;
+                case R.id.image8:
+                    clickedUrls.remove(urlsCopy.get(7));
+                    break;
+                case R.id.image9:
+                    clickedUrls.remove(urlsCopy.get(8));
+                    break;
+                case R.id.image10:
+                    clickedUrls.remove(urlsCopy.get(9));
+                    break;
+                case R.id.image11:
+                    clickedUrls.remove(urlsCopy.get(10));
+                    break;
+                case R.id.image12:
+                    clickedUrls.remove(urlsCopy.get(11));
+                    break;
+                case R.id.image13:
+                    clickedUrls.remove(urlsCopy.get(12));
+                    break;
+                case R.id.image14:
+                    clickedUrls.remove(urlsCopy.get(13));
+                    break;
+                case R.id.image15:
+                    clickedUrls.remove(urlsCopy.get(14));
+                    break;
+                case R.id.image16:
+                    clickedUrls.remove(urlsCopy.get(15));
+                    break;
+                case R.id.image17:
+                    clickedUrls.remove(urlsCopy.get(16));
+                    break;
+                case R.id.image18:
+                    clickedUrls.remove(urlsCopy.get(17));
+                    break;
+                case R.id.image19:
+                    clickedUrls.remove(urlsCopy.get(18));
+                    break;
+                case R.id.image20:
+                    clickedUrls.remove(urlsCopy.get(19));
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (imagesClicked == 6) {
+            Intent intent = new Intent(this,
+                    com.example.fetchimage.MainActivity2.class);
+            intent.putStringArrayListExtra("clickedurls", clickedUrls);
+            startActivity(intent);
         }
     }
 }
