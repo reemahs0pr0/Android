@@ -10,6 +10,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,13 +32,20 @@ public class MainActivity extends AppCompatActivity {
     private ImageView image1, image2, image3, image4, image5, image6, image7, image8, image9,
             image10, image11, image12, image13, image14, image15, image16, image17, image18,
             image19, image20;
+    private TextView message;
     private List<ImageView> images;
+    private int imageNo = 0, size;
+    private List<String> urls = new ArrayList<String>();
+    private DownloadImages myTask;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getBtn = (Button) findViewById(R.id.getBtn);
+        message = (TextView) findViewById(R.id.message);
+        progressBar =(ProgressBar) findViewById(R.id.progressBar);
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
         image3 = (ImageView) findViewById(R.id.image3);
@@ -83,10 +93,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 EditText search = findViewById(R.id.search);
-                getWebsite(search.getText().toString());
-                InputMethodManager imm =
-                        (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                if (search.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(), "Nothing was entered!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if (myTask != null) {
+                        myTask.cancel(true);
+                        imageNo = 0;
+                        urls.clear();
+                    }
+                    for (ImageView image : images) {
+                        int id = getResources().getIdentifier("x",
+                                "drawable", getPackageName());
+                        image.setImageResource(id);
+                    }
+                    getWebsite(search.getText().toString());
+                    String progress = "Downloading " + (imageNo+1) + " of 20 images...";
+                    message.setText(progress);
+                    progressBar.setProgress(imageNo+1);
+                    progressBar.setVisibility(View.VISIBLE);
+                    InputMethodManager imm =
+                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         });
     }
@@ -96,29 +126,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 StringBuilder builder = new StringBuilder();
-                String urls[] = new String[20];
                 String url = "https://stocksnap.io/search/" + search;
-
                 try {
                     Document doc = Jsoup.connect(url).get();
                     Elements links = doc.select("img[src]");
-
                     int i = 0;
                     for (Element link : links) {
-                        i++;
-                        if (i > 3 && i < 24) {
-                            builder.append(link.attr("src"));
-                            urls[i-4] = builder.toString();
-                            builder = new StringBuilder();
+                        builder.append(link.attr("src"));
+                        if (builder.toString().endsWith("jpg")) {
+                            urls.add(builder.toString());
+                            i++;
                         }
-                        if (i == 24) {
+                        builder = new StringBuilder();
+                        if (i == 28) {
                             break;
                         }
                     }
-                    new DownloadImages().execute(urls[0], urls[1], urls[2], urls[3], urls[4],
-                            urls[5], urls[6], urls[7], urls[8], urls[9], urls[10], urls[11],
-                            urls[12], urls[13], urls[14], urls[15], urls[16], urls[17], urls[18],
-                            urls[19]);
+                    for (int j = 0; j < 8; j++) {
+                        urls.remove(0);
+                    }
+                    size = urls.size();
+                    startDownloading();
                 } catch (IOException e) {
                     builder.append("Error : ").append(e.getMessage()).append("\n");
                 }
@@ -126,30 +154,40 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    private class DownloadImages extends AsyncTask<String, Void, Bitmap[]> {
+    private void startDownloading() {
+        String url = urls.remove(0);
+        myTask = new DownloadImages();
+        myTask.execute(url);
+    }
+
+    private class DownloadImages extends AsyncTask<String, Void, Bitmap> {
         @Override
-        protected Bitmap[] doInBackground(String... urls) {
-            Bitmap results[] = new Bitmap[20];
-            int i = 0;
-            for (String url : urls) {
-                try {
-                    InputStream input = new java.net.URL(url).openStream();
-                    Bitmap bitmap = BitmapFactory.decodeStream(input);
-                    results[i] = bitmap;
-                    i++;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap bitmap = null;
+            try {
+                InputStream input = new java.net.URL(urls[0]).openStream();
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return results;
+            return bitmap;
         }
 
         @Override
-        protected void onPostExecute(Bitmap[] results) {
-            int i = 0;
-            for (ImageView image : images) {
-                image.setImageBitmap(results[i]);
-                i++;
+        protected void onPostExecute(Bitmap result) {
+            images.get(imageNo).setImageBitmap(result);
+            imageNo++;
+            if (imageNo <= size-1) {
+                String progress = "Downloading " + (imageNo+1) + " of 20 images...";
+                message.setText(progress);
+                progressBar.setProgress(imageNo+1);
+                startDownloading();
+            }
+            else if (imageNo ==size) {
+                message.setText("");
+                progressBar.setProgress(imageNo+1);
+                progressBar.setVisibility(View.INVISIBLE);
+                imageNo = 0;
             }
         }
     }
