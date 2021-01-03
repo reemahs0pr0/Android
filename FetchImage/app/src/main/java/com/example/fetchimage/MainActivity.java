@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                         myTask.cancel(true);
                         imageNo = 0;
                         urls.clear();
+                        bitmaps.clear();
+                        clickedImagesBitmaps.clear();
+                        clickedImagesBitmapStrings.clear();
                     }
                     for (ImageView image : images) {
                         int id = getResources().getIdentifier("x",

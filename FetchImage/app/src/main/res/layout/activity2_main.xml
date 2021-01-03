@@ -16,12 +16,21 @@
         android:textColor="@color/black"/>
 
     <TextView
+        android:id="@+id/moves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:text="Runs: 0"
+        android:textColor="@color/black"/>
+
+    <TextView
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="330dp"
-        android:text=""
+        android:layout_marginLeft="300dp"
+        android:text="0:00:00"
         android:textColor="@color/black"/>
 
     <GridLayout
