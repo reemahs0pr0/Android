@@ -2,10 +2,12 @@ package com.example.fetchimage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,10 +40,12 @@ public class MainActivity extends AppCompatActivity {
     private List<ImageView> images;
     private int imageNo = 0, size, imagesClicked = 0;
     private List<String> urls = new ArrayList<String>();
-    private List<String> urlsCopy = new ArrayList<String>();
     private DownloadImages myTask;
     private ProgressBar progressBar;
-    private ArrayList<String> clickedUrls = new ArrayList<String>();
+    private List<Bitmap> bitmaps = new ArrayList<Bitmap>();
+    private List<Bitmap> clickedImagesBitmaps = new ArrayList<Bitmap>();
+    private List<String> clickedImagesBitmapStrings = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
                         urls.remove(0);
                     }
                     size = urls.size();
-                    urlsCopy.addAll(urls);
                     startDownloading();
                 } catch (IOException e) {
                     builder.append("Error : ").append(e.getMessage()).append("\n");
@@ -180,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Bitmap result) {
+            bitmaps.add(result);
             images.get(imageNo).setImageBitmap(result);
             imageNo++;
             if (imageNo <= size-1) {
@@ -204,64 +209,64 @@ public class MainActivity extends AppCompatActivity {
             view.setTag("clicked");
             switch (view.getId()) {
                 case R.id.image1:
-                    clickedUrls.add(urlsCopy.get(0));
+                    clickedImagesBitmaps.add(bitmaps.get(0));
                     break;
                 case R.id.image2:
-                    clickedUrls.add(urlsCopy.get(1));
+                    clickedImagesBitmaps.add(bitmaps.get(1));
                     break;
                 case R.id.image3:
-                    clickedUrls.add(urlsCopy.get(2));
+                    clickedImagesBitmaps.add(bitmaps.get(2));
                     break;
                 case R.id.image4:
-                    clickedUrls.add(urlsCopy.get(3));
+                    clickedImagesBitmaps.add(bitmaps.get(3));
                     break;
                 case R.id.image5:
-                    clickedUrls.add(urlsCopy.get(4));
+                    clickedImagesBitmaps.add(bitmaps.get(4));
                     break;
                 case R.id.image6:
-                    clickedUrls.add(urlsCopy.get(5));
+                    clickedImagesBitmaps.add(bitmaps.get(5));
                     break;
                 case R.id.image7:
-                    clickedUrls.add(urlsCopy.get(6));
+                    clickedImagesBitmaps.add(bitmaps.get(6));
                     break;
                 case R.id.image8:
-                    clickedUrls.add(urlsCopy.get(7));
+                    clickedImagesBitmaps.add(bitmaps.get(7));
                     break;
                 case R.id.image9:
-                    clickedUrls.add(urlsCopy.get(8));
+                    clickedImagesBitmaps.add(bitmaps.get(8));
                     break;
                 case R.id.image10:
-                    clickedUrls.add(urlsCopy.get(9));
+                    clickedImagesBitmaps.add(bitmaps.get(9));
                     break;
                 case R.id.image11:
-                    clickedUrls.add(urlsCopy.get(10));
+                    clickedImagesBitmaps.add(bitmaps.get(10));
                     break;
                 case R.id.image12:
-                    clickedUrls.add(urlsCopy.get(11));
+                    clickedImagesBitmaps.add(bitmaps.get(11));
                     break;
                 case R.id.image13:
-                    clickedUrls.add(urlsCopy.get(12));
+                    clickedImagesBitmaps.add(bitmaps.get(12));
                     break;
                 case R.id.image14:
-                    clickedUrls.add(urlsCopy.get(13));
+                    clickedImagesBitmaps.add(bitmaps.get(13));
                     break;
                 case R.id.image15:
-                    clickedUrls.add(urlsCopy.get(14));
+                    clickedImagesBitmaps.add(bitmaps.get(14));
                     break;
                 case R.id.image16:
-                    clickedUrls.add(urlsCopy.get(15));
+                    clickedImagesBitmaps.add(bitmaps.get(15));
                     break;
                 case R.id.image17:
-                    clickedUrls.add(urlsCopy.get(16));
+                    clickedImagesBitmaps.add(bitmaps.get(16));
                     break;
                 case R.id.image18:
-                    clickedUrls.add(urlsCopy.get(17));
+                    clickedImagesBitmaps.add(bitmaps.get(17));
                     break;
                 case R.id.image19:
-                    clickedUrls.add(urlsCopy.get(18));
+                    clickedImagesBitmaps.add(bitmaps.get(18));
                     break;
                 case R.id.image20:
-                    clickedUrls.add(urlsCopy.get(19));
+                    clickedImagesBitmaps.add(bitmaps.get(19));
                     break;
                 default:
                     break;
@@ -272,74 +277,95 @@ public class MainActivity extends AppCompatActivity {
             view.setTag("");
             switch (view.getId()) {
                 case R.id.image1:
-                    clickedUrls.remove(urlsCopy.get(0));
+                    clickedImagesBitmaps.remove(bitmaps.get(0));
                     break;
                 case R.id.image2:
-                    clickedUrls.remove(urlsCopy.get(1));
+                    clickedImagesBitmaps.remove(bitmaps.get(1));
                     break;
                 case R.id.image3:
-                    clickedUrls.remove(urlsCopy.get(2));
+                    clickedImagesBitmaps.remove(bitmaps.get(2));
                     break;
                 case R.id.image4:
-                    clickedUrls.remove(urlsCopy.get(3));
+                    clickedImagesBitmaps.remove(bitmaps.get(3));
                     break;
                 case R.id.image5:
-                    clickedUrls.remove(urlsCopy.get(4));
+                    clickedImagesBitmaps.remove(bitmaps.get(4));
                     break;
                 case R.id.image6:
-                    clickedUrls.remove(urlsCopy.get(5));
+                    clickedImagesBitmaps.remove(bitmaps.get(5));
                     break;
                 case R.id.image7:
-                    clickedUrls.remove(urlsCopy.get(6));
+                    clickedImagesBitmaps.remove(bitmaps.get(6));
                     break;
                 case R.id.image8:
-                    clickedUrls.remove(urlsCopy.get(7));
+                    clickedImagesBitmaps.remove(bitmaps.get(7));
                     break;
                 case R.id.image9:
-                    clickedUrls.remove(urlsCopy.get(8));
+                    clickedImagesBitmaps.remove(bitmaps.get(8));
                     break;
                 case R.id.image10:
-                    clickedUrls.remove(urlsCopy.get(9));
+                    clickedImagesBitmaps.remove(bitmaps.get(9));
                     break;
                 case R.id.image11:
-                    clickedUrls.remove(urlsCopy.get(10));
+                    clickedImagesBitmaps.remove(bitmaps.get(10));
                     break;
                 case R.id.image12:
-                    clickedUrls.remove(urlsCopy.get(11));
+                    clickedImagesBitmaps.remove(bitmaps.get(11));
                     break;
                 case R.id.image13:
-                    clickedUrls.remove(urlsCopy.get(12));
+                    clickedImagesBitmaps.remove(bitmaps.get(12));
                     break;
                 case R.id.image14:
-                    clickedUrls.remove(urlsCopy.get(13));
+                    clickedImagesBitmaps.remove(bitmaps.get(13));
                     break;
                 case R.id.image15:
-                    clickedUrls.remove(urlsCopy.get(14));
+                    clickedImagesBitmaps.remove(bitmaps.get(14));
                     break;
                 case R.id.image16:
-                    clickedUrls.remove(urlsCopy.get(15));
+                    clickedImagesBitmaps.remove(bitmaps.get(15));
                     break;
                 case R.id.image17:
-                    clickedUrls.remove(urlsCopy.get(16));
+                    clickedImagesBitmaps.remove(bitmaps.get(16));
                     break;
                 case R.id.image18:
-                    clickedUrls.remove(urlsCopy.get(17));
+                    clickedImagesBitmaps.remove(bitmaps.get(17));
                     break;
                 case R.id.image19:
-                    clickedUrls.remove(urlsCopy.get(18));
+                    clickedImagesBitmaps.remove(bitmaps.get(18));
                     break;
                 case R.id.image20:
-                    clickedUrls.remove(urlsCopy.get(19));
+                    clickedImagesBitmaps.remove(bitmaps.get(19));
                     break;
                 default:
                     break;
             }
         }
         if (imagesClicked == 6) {
+            for (Bitmap bitmap : clickedImagesBitmaps) {
+                clickedImagesBitmapStrings.add(BitMapToString(bitmap));
+            }
+            SharedPreferences sharedPref = getSharedPreferences("clickedImages",
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("image1", clickedImagesBitmapStrings.get(0));
+            editor.putString("image2", clickedImagesBitmapStrings.get(1));
+            editor.putString("image3", clickedImagesBitmapStrings.get(2));
+            editor.putString("image4", clickedImagesBitmapStrings.get(3));
+            editor.putString("image5", clickedImagesBitmapStrings.get(4));
+            editor.putString("image6", clickedImagesBitmapStrings.get(5));
+            editor.commit();
+
             Intent intent = new Intent(this,
                     com.example.fetchimage.MainActivity2.class);
-            intent.putStringArrayListExtra("clickedurls", clickedUrls);
             startActivity(intent);
         }
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos = new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
     }
 }
